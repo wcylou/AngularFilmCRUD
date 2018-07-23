@@ -11,18 +11,6 @@ import { fromEvent } from '../../../node_modules/rxjs';
 })
 export class FilmComponent implements OnInit {
 
-  films: Film[] = [
-    new Film(1, 'Academy Dinosaur',
-    'A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies',
-    2008, 'G', 120, [{id: 1, firstName: 'Penelope', lastName: 'Cruz'}, {id: 2, firstName: 'Burt', lastName: 'Temple'}]),
-    new Film(2, 'Ace Goldfinger',
-    'A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China',
-    2001, 'R', 48, [{id: 6, firstName: 'Tom', lastName: 'Temple'}]),
-    new Film(3, 'Adaptation Holes',
-    'A Astounding Reflection of a Lumberjack And a Car who must Sink a Lumberjack in A Baloon Factory',
-    2008, 'PG', 120, [{id: 7, firstName: 'Harry', lastName: 'Bolger'}, {id: 4, firstName: 'Bob', lastName: 'Allen'}])
-  ];
-
   actors: Actor[] = [
     new Actor(1, 'Penelope', 'Cruz'),
     new Actor(2, 'Burt', 'Temple'),
@@ -33,6 +21,19 @@ export class FilmComponent implements OnInit {
     new Actor(7, 'Harry', 'Bolger'),
     new Actor(8, 'Dean', 'Malden'),
     ];
+
+  films: Film[] = [
+    new Film(1, 'Academy Dinosaur',
+    'A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies',
+    2008, 'G', 120, [this.actors[5], this.actors[6], this.actors[7]]),
+    new Film(2, 'Ace Goldfinger',
+    'A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China',
+    2001, 'R', 48, [this.actors[3], this.actors[0], this.actors[4]]),
+    new Film(3, 'Adaptation Holes',
+    'A Astounding Reflection of a Lumberjack And a Car who must Sink a Lumberjack in A Baloon Factory',
+    2008, 'PG', 120, [this.actors[0], this.actors[1]])
+  ];
+
 
   selected = null;
   showAllFilms = null;
@@ -144,7 +145,18 @@ export class FilmComponent implements OnInit {
   }
 
   deleteActor() {
-    this.actors.splice((this.selectedActor.id) - 1, 1);
+    this.actors.splice(this.actors.indexOf(this.selectedActor), 1);
+    console.log(this.selectedActor);
+    for (let i = 0; i < this.films.length; i++) {
+      for (let j = 0; j < this.films[i].actors.length; j++) {
+        console.log(this.films[i].actors[j]);
+        console.log(this.selectedActor);
+        if (this.films[i].actors[j] === this.selectedActor) {
+          this.films[i].actors.splice(j, 1);
+          console.log(this.films[i].actors);
+        }
+      }
+    }
     this.selectedActor = null;
   }
 
