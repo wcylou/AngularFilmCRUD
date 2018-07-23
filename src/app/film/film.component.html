@@ -1,0 +1,262 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+  crossorigin="anonymous">
+
+<div *ngIf="!editFilm">
+  <button (click)="displayAllFilms()" class="btn btn-primary">Show All Films</button>
+</div>
+
+<div *ngIf="!createNewFilm && !selected">
+  <button (click)="createNewFilmItem()" class="btn btn-primary">Create New Film</button>
+</div>
+
+<table *ngIf="showAllFilms && !selected && !createNewFilm" class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th style="width: 5%">ID</th>
+      <th style="width: 20%">Title</th>
+      <th style="width: 25%">Description</th>
+      <th style="width: 10%">Release Year</th>
+      <th style="width: 5%">Rating</th>
+      <th style="width: 5%">Length</th>
+      <th style="width: 25%">Actors</th>
+      <th style="width: 5%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let film of films">
+      <td>
+        <h3>{{film.id}}</h3>
+      </td>
+      <td>{{film.title}}</td>
+      <td>{{film.description}}</td>
+      <td>{{film.releaseYear}}</td>
+      <td>{{film.rating}}</td>
+      <td>{{film.length}}</td>
+      <td>
+        <ol>
+          <li *ngFor="let actor of film.actors">{{actor.firstName}} {{actor.lastName}}</li>
+        </ol>
+      </td>
+      <td>
+        <button (click)="displayFilm(film)" class="btn btn-primary">Detailed View</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table *ngIf="selected && !editFilm" class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th style="width: 5%">ID</th>
+      <th style="width: 20%">Title</th>
+      <th style="width: 25%">Description</th>
+      <th style="width: 10%">Release Year</th>
+      <th style="width: 5%">Rating</th>
+      <th style="width: 5%">Length</th>
+      <th style="width: 25%">Actors</th>
+      <th style="width: 5%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <h3>{{selected.id}}</h3>
+      </td>
+      <td>{{selected.title}}</td>
+      <td>{{selected.description}}</td>
+      <td>{{selected.releaseYear}}</td>
+      <td>{{selected.rating}}</td>
+      <td>{{selected.length}}</td>
+      <td>
+        <ol>
+          <li *ngFor="let actor of selected.actors">{{actor.firstName}} {{actor.lastName}}</li>
+        </ol>
+      </td>
+      <button (click)="setEditFilm()" class="btn btn-primary">Edit Film</button>
+      <button (click)="deleteFilm()" class="btn btn-primary">Delete Film</button>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="createNewFilm && !selected && !editFilm" class="container">
+  <h1>New Film</h1>
+  <form #newFilm = "ngForm">
+    <div class="form-group">
+      Title:
+      <input type="text" class="form-control" name="title" placeholder="Film Title" ngModel/>
+    </div>
+    <div class="form-group">
+      Description:
+      <input type="text" class="form-control" name="description" placeholder="Description" ngModel/>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          Release Year:
+          <input type="number" class="form-control" name="releaseYear" placeholder="Release Year" ngModel/>
+        </div>
+      </div>
+        <div class="col">
+        <div class="form-group">
+          Length:
+          <input type="number" class="form-control" name="length" placeholder="Length" ngModel/>
+        </div>
+        </div>
+        <div class="form-group">
+          Rating:
+          <select name="rating" ngModel>
+            <option *ngFor="let rating of ratings">{{rating}}</option>
+          </select>
+      </div>
+    </div>
+  </form>
+  <button (click)="addFilm(newFilm)" class="btn btn-danger">Add Film</button>
+</div>
+
+<div *ngIf="selected && editFilm" class="container">
+  <form #editFilm = "ngForm">
+    <div class="form-group">
+      Film Title:
+      <input type="text" class="form-control" name="title" placeholder="Title" ngModel>
+    </div>
+    <div class="form-group">
+      Description:
+      <input type="text" class="form-control" name="description" placeholder="Description" ngModel/>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          Release Year:
+          <input type="number" class="form-control" name="releaseYear" placeholder="Release Year" ngModel/>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          Length:
+          <input type="number" class="form-control" name="length" placeholder="Length" ngModel/>
+        </div>
+      </div>
+      <div class="form-group">
+        Rating
+        <select name="rating" placeholder="Rating" ngModel class="custom-select">
+          <option *ngFor="let rating of ratings">{{rating}}</option>
+        </select>
+      </div>
+    </div>
+    Actors
+    <div class="form-group">
+        <div class="form-group">
+            Add Actor
+            <select name="actors" ngModel class="custom-select">
+              <option *ngFor="let actor of actors" [value]="actor.id">{{actor.firstName}} {{actor.lastName}}</option>
+            </select>
+
+          </div>
+    </div>
+    <button (click)="updateFilm(editFilm)" class="btn btn-primary">Update</button>
+    <button (click)="resetFilm()" class="btn btn-primary">Cancel</button>
+  </form>
+</div>
+
+<div *ngIf="!editActor">
+    <button (click)="displayAllActors()" class="btn btn-primary">Show All Actors</button>
+  </div>
+
+  <div *ngIf="!createNewActor && !selected">
+      <button (click)="createNewActorItem()" class="btn btn-primary">Create New Actor</button>
+    </div>
+
+  <table *ngIf="showAllActors && !selectedActor && !createNewActor" class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let actor of actors">
+      <td>
+        <h3>{{actor.id}}</h3>
+      </td>
+      <td>{{actor.firstName}}</td>
+      <td>{{actor.lastName}}</td>
+      <td>
+        <button (click)="displayActor(actor)" class="btn btn-primary">Detailed View</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table *ngIf="selectedActor && !editActor" class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <h3>{{selectedActor.id}}</h3>
+        </td>
+        <td>{{selectedActor.firstName}}</td>
+        <td>{{selectedActor.lastName}}</td>
+        <td>
+          <button (click)="setEditActor()" class = "btn btn-primary">Edit Actor</button>
+          <button (click)="deleteActor()" class="btn btn-primary">Delete Actor</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="createNewActor && !selectedActor && !editActor" class="container">
+    <h1>New Actor</h1>
+    <form #newActor="ngForm">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            First Name:
+            <input type="text" class="form-control" name="firstName" placeholder="First Name" ngModel/>
+          </div>
+          <div class="form-group">
+            Last Name:
+            <input type="text" class="form-control" name="lastName" placeholder="Last Name" ngModel/>
+          </div>
+        </div>
+      </div>
+    </form>
+    <button (click)="addActor(newActor)" class = "btn btn-danger">Add Actor</button>
+  </div>
+
+  <div *ngIf="selectedActor && editActor" class="container">
+    <form #editActor="ngForm">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            First Name:
+            <input type="text" class="form-control" name="firstName" placeholder="First Name" ngModel/>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            Last Name:
+            <input type="text" class="form-control" name="lastName" placeholder="Last Name" ngModel/>
+          </div>
+        </div>
+      </div>
+      <button (click)="updateActor(editActor)" class = "btn btn-primary">Update Actor</button>
+      <button (click)="resetActor()" class = "btn btn-primary">Cancel</button>
+    </form>
+  </div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+  crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+  crossorigin="anonymous"></script>
